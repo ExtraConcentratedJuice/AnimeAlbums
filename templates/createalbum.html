@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block body %}
+	<div class="jumbotron">
+  <div class="container">
+		<div class="page-header">
+  <h2>Create an Album <br /><small>You currently have {{ albums }} albums in total.</small></h2>
+		{% with msgs = get_flashed_messages() %} {% if msgs %}
+		<ul class=errors>
+			{% for message in msgs %}
+			<li>{{ message }}</li>
+			{% endfor %}
+		</ul>
+		{% endif %} {% endwith %}
+		<hr />
+		<form action="{{ url_for('create_album') }}" method="POST">
+			<div class="form-group">
+				<label for="a-name">Album Name</label>
+				<input name="name" class="form-control" id="name" placeholder="Catgirls" />
+			</div>
+			<div class="form-group">
+				<label for="password">Description</label>
+				<input name="description" class="form-control" id="description" placeholder="Some very cute catgirls." />
+			</div>
+			<button type="submit" class="btn btn-default">Submit</button>
+		</form>
+	</div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block body %}
+	<div class="container login-box">
+		<div class="well">
+			<h2>Success!</h2>
+			<hr />
+			<p>
+				{% if action == 'register' %}
+				You have registered under the username '{{ username }}.'
+				{% elif action == 'login' %}
+				You were successfully logged in.
+				{% elif action == 'logout' %}
+				You were successfully logged out.
+				{% elif action == 'createalbum' %}
+				Album created successfully!
+				{% else %}
+				Yeah, I don't even know what you're doing here.
+				{% endif %}<br />
+				<br />
+				<a href="/">Main Page</a>
+			</p>
+		</div>
+	</div>
+{% endblock %}

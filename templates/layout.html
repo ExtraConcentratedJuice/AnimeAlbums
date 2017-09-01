@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	{% if redirect %}
+	<meta http-equiv="refresh" content="3; url={{ url }}" />
+	{% endif %}
+<title>AnimeAlbums</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<script
+			  src="https://code.jquery.com/jquery-2.2.4.min.js"
+			  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+			  crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+<link rel="stylesheet" href="{{ url_for('static',filename='styles/index.css') }}" />
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top">
+	  <div class="container">
+			<div class="navbar-header">
+	      <a class="navbar-brand" href="/">AnimeAlbums</a>
+	  </div>
+		<ul class="nav navbar-nav">
+        <li><a href="#">Public Galleries</a></li>
+        <li><a href="#">FAQ</a></li>
+		</ul>
+		<ul class="nav navbar-nav navbar-right">
+
+        {% if session.logged_in %}
+				<li class="dropdown">
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#">You
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="#">My Profile</a></li>
+          <li><a href="#">My Albums</a></li>
+          <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+				{% else %}
+				<ul class="nav navbar-nav navbar-right">
+            <li class="{% if login_page %}active{% endif %}"><a href="{{ url_for('login') }}">Login</a></li>
+          </ul>
+				{% endif %}
+      </li>
+		</ul>
+	</nav>
+	{% block body %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,16 @@
+ <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>title</title>
+  </head>
+  <body>
+  {%if users%}
+  <h1>users</h1>
+  {%for u in users%}
+  <br />
+  {{u[1]}}
+  {%endfor%}
+  {%endif%}
+  </body>
+</html>

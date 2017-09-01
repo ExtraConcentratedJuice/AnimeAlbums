@@ -1,0 +1,14 @@
+body {
+	background-color: #787878;
+}
+.aa-header {
+	margin-top: 5%;
+	margin-left: 1%;
+}
+.login-box {
+	margin-top: 10%;
+	width: 30%;
+}
+.errors {
+	color: red
+}

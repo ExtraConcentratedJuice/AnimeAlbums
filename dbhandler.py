@@ -1,7 +1,7 @@
 import sqlite3
 
 def get_users():
-    db = sqlite3.connect('database.db')
+    db = sqlite3.connect("database.db")
     c = db.cursor()
     c.execute('SELECT id, username FROM users')
     users = c.fetchall()
@@ -10,7 +10,7 @@ def get_users():
 
 def create_new_user(username, password, email):
     try:
-        db = sqlite3.connect('database.db')
+        db = sqlite3.connect("database.db")
         c = db.cursor()
         c.execute("SELECT * FROM users WHERE username = ?", (username, ))
         d = c.fetchone()
@@ -27,7 +27,7 @@ def create_new_user(username, password, email):
 
 def fetch_user(username):
     try:
-        db = sqlite3.connect('database.db')
+        db = sqlite3.connect("database.db")
         c = db.cursor()
         c.execute("SELECT password, id, username FROM users WHERE username = ?", (username, ))
         data = c.fetchone()
@@ -43,7 +43,7 @@ def fetch_user(username):
 
 def create_new_album(name, description, owner, thumbnail):
     try:
-        db = sqlite3.connect('database.db')
+        db = sqlite3.connect("database.db")
         c = db.cursor()
         c.execute("INSERT INTO albums (ownerid, about, name, thumb) VALUES (?,?,?,?)", (owner, description, name, thumbnail))
         db.commit()
@@ -56,7 +56,7 @@ def create_new_album(name, description, owner, thumbnail):
 
 def create_new_post(name, description, link, owner, tags, albumid):
     try:
-        db = sqlite3.connect('database.db')
+        db = sqlite3.connect("database.db")
         c = db.cursor()
         c.execute("INSERT INTO posts (ownerid, about, name, tags, link, albumid) VALUES (?,?,?,?,?,?)", (owner, description, name, tags, link, albumid))
         db.commit()
@@ -67,7 +67,7 @@ def create_new_post(name, description, link, owner, tags, albumid):
         return False
 
 def fetch_album_posts(albumid):
-    db = sqlite3.connect('database.db')
+    db = sqlite3.connect("database.db")
     c = db.cursor()
     c.execute("SELECT * FROM posts WHERE albumid = ?", (albumid, ))
     posts = c.fetchall()
@@ -75,7 +75,7 @@ def fetch_album_posts(albumid):
     return posts
 
 def fetch_album(albumid):
-    db = sqlite3.connect('database.db')
+    db = sqlite3.connect("database.db")
     c = db.cursor()
     c.execute("SELECT * FROM albums WHERE id = ?", (albumid, ))
     album = c.fetchone()
@@ -89,7 +89,7 @@ def fetch_album(albumid):
 
 def fetch_all_albums():
     try:
-        db = sqlite3.connect('database.db')
+        db = sqlite3.connect("database.db")
         c = db.cursor()
         c.execute("SELECT * FROM albums")
         albums = c.fetchall()
@@ -101,7 +101,7 @@ def fetch_all_albums():
 
 def fetch_album_owner(albumid):
     try:
-        db = sqlite3.connect('database.db')
+        db = sqlite3.connect("database.db")
         c = db.cursor()
         c.execute("SELECT ownerid FROM albums WHERE id = ?", (albumid, ))
         ownerid = c.fetchone()[0]
@@ -114,7 +114,7 @@ def fetch_album_owner(albumid):
         return False
 
 def fetch_user_albums(userid):
-    db = sqlite3.connect('database.db')
+    db = sqlite3.connect("database.db")
     c = db.cursor()
     c.execute("SELECT * FROM albums WHERE ownerid = ?", (userid, ))
     albums = c.fetchall()

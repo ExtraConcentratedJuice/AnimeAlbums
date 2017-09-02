@@ -1,17 +1,15 @@
 from flask import Flask, request, session, url_for, redirect, \
 render_template, abort, g, flash, _app_ctx_stack
-from flask_login import LoginManager, UserMixin, login_required
+from flask_wtf.csrf import CSRFProtect, CSRFError
 from werkzeug.security import generate_password_hash, check_password_hash
-from hashlib import sha256
 import dbhandler
 import re
 import requests
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
-login_manager = LoginManager()
-login_manager.init_app(app)
-
+csrf = CSRFProtect(app)
+csrf.init_app(app)
 app.secret_key = app.config['SECRET_KEY']
 valid_images = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg',]
 

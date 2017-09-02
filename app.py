@@ -3,9 +3,9 @@ render_template, abort, g, flash, _app_ctx_stack
 from flask_login import LoginManager, UserMixin, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from hashlib import sha256
-import wtforms
 import dbhandler
 import re
+import requests
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
@@ -13,6 +13,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 app.secret_key = app.config['SECRET_KEY']
+valid_images = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg',]
 
 @app.route('/')
 def index():
@@ -25,6 +26,12 @@ def index():
       albums = dbhandler.fetch_user_albums(session['id'])
       alen = len(albums)
       return render_template('index.html', albums=albums, albumlen=alen)
+
+@app.route('/all')
+def galleries():
+      albums = dbhandler.fetch_all_albums()
+      alen = len(albums)
+      return render_template('gallery.html', albums=albums, alen=alen)
 
 @app.route('/newpost', methods=['GET', 'POST'])
 def create_post():
@@ -61,6 +68,16 @@ def create_post():
             if not (len(d) < 120):
                   flash('Your description must be less than 120 characters long.')
                   return render_template('createpost.html', albums=albums)
+
+            try:
+                  response = requests.head(l)
+                  if response.headers.get('content-type') not in valid_images:
+                        flash('Invalid image. Please directly link an image. content-type is not image.')
+                        return render_template('createpost.html', albums=albums)
+            except:
+                  flash('Invalid image. Please directly link an image.')
+                  return render_template('createpost.html', albums=albums)
+
 
             if dbhandler.create_new_post(n, d, l, session['id'], t, a):
                   flash('Success! Post added to album "{}"'.format(albumname))
@@ -108,27 +125,36 @@ def my_albums():
 @app.route('/createalbum', methods=['GET', 'POST'])
 def create_album():
     if request.method == 'POST':
-        try:
+      try:
             if not session['logged_in']:
-                return 'You are not logged in.'
-        except:
+                  return 'You are not logged in.'
+      except:
             return 'You are not logged in.'
         
-        n = request.form['name']
-        d = request.form['description']
-        t = request.form['thumbnail']
+      n = request.form['name']
+      d = request.form['description']
+      t = request.form['thumbnail']
 
-        if not (len(n) > 4 and len(n) < 70):
+      if not (len(n) > 4 and len(n) < 70):
             flash('Name length must be between 4 and 70 characters.')
             return render_template('createalbum.html')
 
-        if not (len(d) < 350):
+      if not (len(d) < 350):
             flash('Your description must be less than 350 characters long.')
             return render_template('createalbum.html')
+      
+      try:
+            response = requests.head(t)
+            if response.headers.get('content-type') not in valid_images:
+                  flash('Invalid thumbnail. Please directly link an image. content-type is not image.')
+                  return render_template('createalbum.html')
+      except:
+            flash('Invalid thumbnail. Please directly link an image.')
+            return render_template('createalbum.html')
 
-        if dbhandler.create_new_album(n, d, session['id'], t):
+      if dbhandler.create_new_album(n, d, session['id'], t):
             return render_template('success.html', action='createalbum', redirect=True, url='/')
-        else:
+      else:
             flash('Failed to create album.')
             return render_template('createalbum.html')
     else:

@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block body %}
+	<div class="jumbotron">
+  <div class="container">
+		<div class="page-header">
+  <h2>All Albums</h2><small>{{ alen }} in total.</small>
+</div>
+{% if albums %}
+<div class="row">
+	{% for a in albums %}
+			<div class="col-xs-6 col-md-4"><div class="panel panel-default">
+				<div class="panel-heading"><a href="{{ url_for('view_album') }}?id={{ a[0] }}">{{ a[3] }}</a></div>
+			<div class="panel-body">
+				<img src="{{ a[5] }}" class="image-post img-thumbnail">
+			</div>
+			<div class="panel-footer">{{ a[2] }}</div>
+		</div>
+		</div>
+	{% endfor %}
+</div>
+{% else %}
+<p>
+	You haven't created any albums yet!
+</p>
+{% endif %}
+{% endblock %}

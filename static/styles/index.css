@@ -19,3 +19,9 @@ body {
 	max-height: 15em;
 	max-width: 24em;
 }
+.panel-body {
+	min-height: 18em;
+}
+.panel {
+	margin-top: 1em;
+}

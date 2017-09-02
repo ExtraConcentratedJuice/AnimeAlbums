@@ -3,7 +3,7 @@ import sqlite3
 def get_users():
     db = sqlite3.connect('database.db')
     c = db.cursor()
-    c.execute('SELECT * FROM users')
+    c.execute('SELECT id, username FROM users')
     users = c.fetchall()
     db.close()
     return users
@@ -84,6 +84,18 @@ def fetch_album(albumid):
         db.close()
         return album
     else:
+        db.close()
+        return False
+
+def fetch_all_albums():
+    try:
+        db = sqlite3.connect('database.db')
+        c = db.cursor()
+        c.execute("SELECT * FROM albums")
+        albums = c.fetchall()
+        db.close()
+        return albums
+    except:
         db.close()
         return False
 

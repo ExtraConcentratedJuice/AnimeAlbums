@@ -24,7 +24,7 @@
 	      <a class="navbar-brand" href="/">AnimeAlbums</a>
 	  </div>
 		<ul class="nav navbar-nav">
-        <li><a href="javascript:alert('WIP');">Public Galleries</a></li>
+        <li><a href="{{ url_for('galleries') }}">Public Galleries</a></li>
         <li><a href="javascript:alert('WIP');">FAQ</a></li>
 				{% if session.logged_in %}
 				<li><a href="{{ url_for('create_album') }}">Create Album</a></li>

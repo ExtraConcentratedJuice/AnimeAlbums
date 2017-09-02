@@ -1,15 +1,32 @@
 {% extends "layout.html" %}
 {% block body %}
-	<div class="jumbotron">
+<div class="jumbotron">
+	<div class="container">
+	<div class="page-header text-center">
+	<h2>AnimeAlbums</h2>
+	<h3>A terrible solution to organizing your Chinese cartoon artwork.</h3>
+	</div>
+</div>
+</div>
   <div class="container">
+{% if session.logged_in %}
 		<div class="page-header">
-  <h2>Your Albums <br /><small>You currently have 5 albums in total.</small></h2>
+  <h2>Your Albums<br /><small>You currently have {{ albumlen }} albums in total.</small></h2>
 </div>
 <div class="row">
-  <div class="col-xs-6 col-md-4">weeb1</div>
-  <div class="col-xs-6 col-md-4">weeb2</div>
-  <div class="col-xs-6 col-md-4">weeb3</div>
+	{% for a in albums %}
+	<div class="col-xs-6 col-md-4"><div class="panel panel-default">
+		<div class="panel-heading"><a href="{{ url_for('view_album') }}?id={{ a[0] }}">{{ a[3] }}</a></div>
+	<div class="panel-body">
+		<img src="{{ a[5] }}" class="image-post img-thumbnail">
+	</div>
+	<div class="panel-footer">{{ a[2] }}</div>
 </div>
+</div>
+	{% endfor %}
+</div>
+{% else %}
+<h2><a href="{{ url_for('login') }}">Login</a> to start putting together your own albums!</h2>
+{% endif %}
   </div>
-</div>
 {% endblock %}

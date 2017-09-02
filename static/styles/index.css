@@ -1,5 +1,5 @@
 body {
-	background-color: #787878;
+	background-color: #f2f2f2;
 }
 .aa-header {
 	margin-top: 5%;
@@ -11,4 +11,11 @@ body {
 }
 .errors {
 	color: red
+}
+ .panel-footer {
+  word-wrap:break-word;
+}
+.image-post {
+	max-height: 15em;
+	max-width: 24em;
 }

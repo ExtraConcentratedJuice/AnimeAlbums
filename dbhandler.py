@@ -41,16 +41,70 @@ def fetch_user(username):
         db.close()
         return False
 
-def create_new_album(name, description, owner):
+def create_new_album(name, description, owner, thumbnail):
     try:
         db = sqlite3.connect('database.db')
         c = db.cursor()
-        c.execute("INSERT INTO albums (ownerid, about, name) VALUES (?,?,?)", (owner, description, name))
+        c.execute("INSERT INTO albums (ownerid, about, name, thumb) VALUES (?,?,?,?)", (owner, description, name, thumbnail))
         db.commit()
         c.execute("SELECT * FROM albums WHERE id = (SELECT MAX(id) FROM albums)")
         data = c.fetchone()
-        print(data)
         return data
     except:
         db.close()
         return False
+
+def create_new_post(name, description, link, owner, tags, albumid):
+    try:
+        db = sqlite3.connect('database.db')
+        c = db.cursor()
+        c.execute("INSERT INTO posts (ownerid, about, name, tags, link, albumid) VALUES (?,?,?,?,?,?)", (owner, description, name, tags, link, albumid))
+        db.commit()
+        db.close()
+        return True
+    except:
+        db.close()
+        return False
+
+def fetch_album_posts(albumid):
+    db = sqlite3.connect('database.db')
+    c = db.cursor()
+    c.execute("SELECT * FROM posts WHERE albumid = ?", (albumid, ))
+    posts = c.fetchall()
+    db.close()
+    return posts
+
+def fetch_album(albumid):
+    db = sqlite3.connect('database.db')
+    c = db.cursor()
+    c.execute("SELECT * FROM albums WHERE id = ?", (albumid, ))
+    album = c.fetchone()
+
+    if album != None:
+        db.close()
+        return album
+    else:
+        db.close()
+        return False
+
+def fetch_album_owner(albumid):
+    try:
+        db = sqlite3.connect('database.db')
+        c = db.cursor()
+        c.execute("SELECT ownerid FROM albums WHERE id = ?", (albumid, ))
+        ownerid = c.fetchone()[0]
+        c.execute("SELECT id, username FROM users WHERE id = ?", (ownerid, ))
+        data = c.fetchone()
+        db.close()
+        return data
+    except:
+        db.close()
+        return False
+
+def fetch_user_albums(userid):
+    db = sqlite3.connect('database.db')
+    c = db.cursor()
+    c.execute("SELECT * FROM albums WHERE ownerid = ?", (userid, ))
+    albums = c.fetchall()
+    db.close()
+    return albums

@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block body %}
+	<div class="jumbotron">
+  <div class="container">
+		<div class="page-header">
+  <h2>Create a Post <br /><small>Put an image into a album. We don't host them, they are hotlinked.</small></h2>
+		{% with msgs = get_flashed_messages() %} {% if msgs %}
+		<ul class=errors>
+			{% for message in msgs %}
+			<li>{{ message }}</li>
+			{% endfor %}
+		</ul>
+		{% endif %} {% endwith %}
+		<hr />
+		<form action="{{ url_for('create_post') }}" method="POST">
+			<div class="form-group">
+				<label for="album">Album</label>
+				<br />
+				<select name="album" id="album" class="selectpicker">
+					{% for album in albums %}
+					<option value="{{ album[0] }}">{{ album[3]}}</option>
+					{% endfor %}
+	</select>
+			</div>
+
+			<div class="form-group">
+				<label for="name">Post Name</label>
+				<input name="name" class="form-control" id="name" placeholder="Catgirl" />
+			</div>
+			<div class="form-group">
+				<label for="description">Description</label>
+				<input name="description" class="form-control" id="description" placeholder="Nyaa!" />
+			</div>
+			<div class="form-group">
+				<label for="link">Direct Image Link</label>
+				<input name="link" class="form-control" id="link" placeholder="https://imagehoster.com/meme.png" />
+			</div>
+			<div class="form-group">
+				<label for="tags">Tags</label>
+				<input name="tags" class="form-control" id="tags" placeholder="cat_ears tail blonde_hair blue_eyes all_fours" />
+			</div>
+			<button type="submit" class="btn btn-default">Submit</button>
+		</form>
+	</div>
+</div>
+</div>
+{% endblock %}

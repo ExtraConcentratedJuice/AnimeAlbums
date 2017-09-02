@@ -3,13 +3,24 @@
 	<div class="jumbotron">
   <div class="container">
 		<div class="page-header">
-  <h2>Your Albums <br /><small>You currently have 5 albums in total.</small></h2>
+  <h2>{{ name }} <small>by {{ author }}</small><br /><small>{{ desc }}</small></h2>
 </div>
+{% if posts %}
 <div class="row">
-  <div class="col-xs-6 col-md-4">weeb1</div>
-  <div class="col-xs-6 col-md-4">weeb2</div>
-  <div class="col-xs-6 col-md-4">weeb3</div>
+	{% for p in posts %}
+			<div class="col-xs-6 col-md-4"><div class="panel panel-default">
+				<div class="panel-heading">{{ p[5] }}</div>
+			<div class="panel-body">
+				<img src="{{ p[4] }}" class="image-post img-thumbnail">
+			</div>
+			<div class="panel-footer">{{ p[2] }}</div>
+		</div>
+		</div>
+	{% endfor %}
 </div>
-  </div>
-</div>
+{% else %}
+<p>
+	No posts in this album yet!
+</p>
+{% endif %}
 {% endblock %}

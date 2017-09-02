@@ -16,8 +16,95 @@ app.secret_key = app.config['SECRET_KEY']
 
 @app.route('/')
 def index():
-      return render_template('index.html')
+      try:
+            if not session['logged_in']:
+                  return render_template('index.html')
+      except:
+            return render_template('index.html')
+      
+      albums = dbhandler.fetch_user_albums(session['id'])
+      alen = len(albums)
+      return render_template('index.html', albums=albums, albumlen=alen)
 
+@app.route('/newpost', methods=['GET', 'POST'])
+def create_post():
+      if request.method == 'POST':
+            try:
+                  if not session['logged_in']:
+                        return render_template('login.html')
+            except:
+                  return render_template('login.html')
+
+            a = request.form['album']
+            n = request.form['name']
+            d = request.form['description']
+            l = request.form['link']
+            t = request.form['tags']
+
+            #Verify that user owns album
+            albums = dbhandler.fetch_user_albums(session['id'])
+            owns_album = False
+            for album in albums:
+                  if int(a) == int(album[0]):
+                        albumname = album[3]
+                        owns_album = True
+                        break
+
+            if not owns_album:
+                  flash('You do not own that album. Nope, no permissions. Stop.')
+                  return render_template('createpost.html', albums=albums)
+
+            if not (len(n) > 4 and len(n) < 35):
+                  flash('Name length must be between 4 and 35 characters.')
+                  return render_template('createpost.html', albums=albums)
+
+            if not (len(d) < 120):
+                  flash('Your description must be less than 120 characters long.')
+                  return render_template('createpost.html', albums=albums)
+
+            if dbhandler.create_new_post(n, d, l, session['id'], t, a):
+                  flash('Success! Post added to album "{}"'.format(albumname))
+                  return render_template('createpost.html', albums=albums)
+            else:
+                  flash('Failed to create post.'.format(albumname))
+                  return render_template('createpost.html', albums=albums)
+      else:
+            try:
+                  if not session['logged_in']:
+                        return render_template('login.html')
+            except:
+                  return render_template('login.html')
+            albums = dbhandler.fetch_user_albums(session['id'])
+            return render_template('createpost.html', albums=albums)
+
+@app.route('/album')
+def view_album():
+      albumid = request.args.get('id')
+      posts = dbhandler.fetch_album_posts(albumid)
+      
+      if len(posts) == 0:
+            if dbhandler.fetch_album(albumid):
+                  albumdata = dbhandler.fetch_album(albumid)
+                  ownerdata = dbhandler.fetch_album_owner(albumid)
+                  return render_template('album.html', author=ownerdata[1], name=albumdata[3], desc=albumdata[2])
+            else:
+                  return render_template('error.html', action='notfound')
+            
+      albumdata = dbhandler.fetch_album(albumid)
+      ownerdata = dbhandler.fetch_album_owner(albumid)
+      
+      return render_template('album.html', author=ownerdata[1], name=albumdata[3], desc=albumdata[2], posts=posts)
+      
+@app.route('/myalbums')
+def my_albums():
+      albums = dbhandler.fetch_user_albums(session['id'])
+      
+      if len(albums) == 0:
+            return render_template('myalbums.html')
+      
+      return render_template('myalbums.html', albums=albums)
+
+      
 @app.route('/createalbum', methods=['GET', 'POST'])
 def create_album():
     if request.method == 'POST':
@@ -29,6 +116,7 @@ def create_album():
         
         n = request.form['name']
         d = request.form['description']
+        t = request.form['thumbnail']
 
         if not (len(n) > 4 and len(n) < 70):
             flash('Name length must be between 4 and 70 characters.')
@@ -38,7 +126,7 @@ def create_album():
             flash('Your description must be less than 350 characters long.')
             return render_template('createalbum.html')
 
-        if dbhandler.create_new_album(n, d, session['id']):
+        if dbhandler.create_new_album(n, d, session['id'], t):
             return render_template('success.html', action='createalbum', redirect=True, url='/')
         else:
             flash('Failed to create album.')

@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block body %}
+	<div class="container login-box">
+		<div class="well">
+			<h2>Error</h2>
+			<hr />
+			<p>
+				{% if action == 'nopost' %}
+				The album requested has no posts.
+				{% elif action == 'notfound' %}
+				The album requested was not found.
+				{% else %}
+				Yeah, I don't even know what you're doing here.
+				{% endif %}<br />
+				<br />
+				<a href="/">Main Page</a>
+			</p>
+		</div>
+	</div>
+{% endblock %}
